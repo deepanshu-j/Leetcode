@@ -1,0 +1,2 @@
+See the first approach that comes is  reccursive(but will work for DAG's),
+So how to work for cyclic graphs as well, Use hash map, for every node store in a map a new node corresponding to this node and in the next dfs traversal connect these.
