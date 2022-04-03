@@ -1,40 +1,33 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
-class Solution {
-public:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
     
-    TreeNode* recc(int i, int j, vector<int> &nums){
-        if(i<0 or j>=nums.size() or i>=nums.size() or j<0 or i>j)return nullptr;
+    def recc(self, i, j, nums)->Optional[TreeNode]:
+        if i<0 or j>=len(nums) or j<0 or i>=len(nums) or i>j:
+            return None
         
-        if(i==j){ // leaf node 
-            TreeNode* node=new TreeNode(nums[i]); 
-            return node;
-        }
+        if i==j:
+            node = TreeNode(nums[i])
+            return node
         
-        int mx=-1, idx=-1;
-        for(int k=i;k<=j;++k){
-            if(mx<=nums[k]){
-                mx=nums[k];
-                idx=k;
-            }
-        }
-        assert(idx<nums.size() and idx>=0);
-        TreeNode *left=recc(i, idx-1, nums), *right=recc(idx+1, j, nums);
+        # find the index of the max el #
+        mx = -1
+        idx= -1
+        for k in range(i, j+1):
+            if nums[k]>=mx:
+                mx=nums[k]
+                idx=k
+        left = self.recc(i, idx-1, nums)
+        right = self.recc(idx+1, j, nums)
         
-        TreeNode* node =new TreeNode(nums[idx], left, right);
-        return node;
-    }
+        this_node = TreeNode(nums[idx], left, right)
+        return this_node
+        
     
-    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
-        return recc(0, nums.size()-1, nums);
-    }
-};
+    def constructMaximumBinaryTree(self, nums: List[int]) -> Optional[TreeNode]:
+        return self.recc(0, len(nums)-1, nums)
+        
