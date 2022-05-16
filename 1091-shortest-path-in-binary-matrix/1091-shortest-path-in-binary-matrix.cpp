@@ -46,7 +46,7 @@ public:
                     for(int j=-1;j<=1;++j){
                         if(not (i==0 and j==0)){
                             if(is_valid(x-i, y-j) and (dist[x-i][y-j]>1+level) ){
-                                dist[x-i][y-j]=1+level;
+                                dist[x-i][y-j]=1+dist[x][y];
                                 q.push({x-i, y-j});
                             }
                         }
