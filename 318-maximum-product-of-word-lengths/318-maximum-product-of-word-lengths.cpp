@@ -3,7 +3,7 @@ public:
     int maxProduct(vector<string>& words) {
         
         vector<vector<bool>> freq;
-        
+        freq.reserve(words.size());
         for(int i=0;i<words.size();++i){
             
             vector<bool> mp(26);
