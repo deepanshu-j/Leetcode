@@ -1,53 +1,29 @@
-#define pii pair<int,int> 
-#define inf 0x3f3f3f3f
-#define eb emplace_back
-#define mkp make_pair
+#define rep(i,a,b) for(int i=a;i<b;++i)
 class Solution {
 public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        map<int, vector<pii>> graph;
-        for(auto &x: times)
-            graph[x[0]].eb(mkp(x[1], x[2]));
         
+        int inf = 0x3f3f3f3f;
         
-        int src=k;
+        int dist[n+2];
+        rep(i,0,n+1)dist[i]=inf;
         
-        int vis[n+1];
-        for(int i=1;i<=n;++i)vis[i]=0;
-        int dist[n+1];
-        for(int i=1;i<=n;++i)dist[i]=inf;
+        dist[k]=0;
         
-        dist[src]=0;
-        
-        priority_queue<pii, vector<pii>, greater<pii>> pq; // {dist_from_src, node }
-        
-        pq.push(mkp(0, src));
-        
-        while(!pq.empty()){
-            int start = pq.top().second;
-            int dist_start = pq.top().first; // will be same as dist[start] //
-            pq.pop();
-            
-            if(vis[start])continue;
-            
-            vis[start]=1;
-            
-            for(auto x: graph[start]){
-                int v=x.first;
-                int wt=x.second;
-                if(dist_start+wt<dist[v]){
-                    dist[v] = dist_start + wt;
-                    pq.push({dist[v], v});
-                }
+        rep(j,0,n+2){
+            for(auto &x: times){
+                int u=x[0],v=x[1],w=x[2];
+                // if(dist[v]<dist[u]+w)
+                    // dist[v] = dist[u]+w
+                dist[v]=min(dist[v], dist[u]+w);
             }
         }
-        // return dist[3];
-        int ans=0;
         
-        for(int i=1;i<=n;++i)
-            ans=max(dist[i], ans);
+        // rep(i,0,n+1)cout<<dist[i]<<" ";
         
-        return (ans==inf)?-1:ans;
+        int mx=-1;
+        rep(i,1,n+1)mx = max(mx, dist[i]);
         
+        return ((mx==inf)?-1:mx);
     }
 };
