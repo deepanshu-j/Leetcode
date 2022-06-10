@@ -4,21 +4,21 @@ public:
         int n=s.length();
         
         map<int,int> mp;
-        int j=0;
+        
+        int i=0;
         int ans=0;
-        for(int i=0;i<n;++i){
-            int val = s[i]-'a';
+        for(int j=0;j<n;++j){
+            int val=s[j]-'a';
             mp[val]++;
             
-            while(mp[val]>1){
-                int val_j = s[j]-'a';
-                mp[val_j]--;
-                j++;
+            while(mp[val]>1 and i<j){
+                // keep removing 
+                mp[s[i]-'a']--;
+                ++i;
             }
             
-            ans = max(ans, i-j+1);
+            ans = max(ans, j-i+1);
         }
-        
         return ans;
     }
 };
