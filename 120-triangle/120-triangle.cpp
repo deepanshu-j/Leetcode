@@ -10,10 +10,6 @@ public:
                 triangle[i][j] += min(triangle[i+1][j], triangle[i+1][j+1]);
             }
         }
-        // for(auto x: triangle){
-        //     for(auto y: x)cout<<y<<" ";
-        //     cout<<"\n";
-        // }
         
         return triangle[0][0];
     }
