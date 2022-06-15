@@ -3,6 +3,10 @@ class Solution {
     bool check(string &a, string &b) {
         
         int len = a.size();
+        int len2 = b.size();
+        
+        if(len2 - len != 1)
+            return false;
         // 0 1 2 3 //
         // a b c   //
         // a b a c //
@@ -28,9 +32,7 @@ public:
             
             int len = words[i].length();
             for(int j=i+1;j<n;++j){
-                if(words[j].length() == len )
-                    continue;
-                if(words[j].length() > len+1 )
+                if(words[j].length() > len+1)
                     break;
                 if(check(words[i], words[j]))
                     dp[i] = max(dp[i], 1 + dp[j]);
