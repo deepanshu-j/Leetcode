@@ -1,4 +1,3 @@
-#define inf 0x3f3f3f3f
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -12,91 +11,62 @@
  */
 class Solution {
 public:
+    map<TreeNode*, int> mp;
+    int memo[1001][2][2];
     
-    // Every node must be either covered by 1. its parent or 2. Itself or 3. Atleast one of its direct child //
+    // iscovered = True means that node is already covered by its parent //
+    // must = True means that node must be covered because its parent relies on him // 
     
-    // Every node will be either already covered by its parent // then we will have a choice to put a camera on the node or its child 
-    // If a node is not already covered by its parent then  it must be covered by it direct child or itself //
-
-    map<pair<TreeNode*, bool>, int> memo; 
-    int dp(TreeNode* root, bool covered){
+    int dp(TreeNode* root, bool iscovered, bool must){ 
         
-        // base case //
-        // if(!root){
-        //     return inf;
-        // }
-        
-        if(!root->left and !root->right){ // leaf node
-            if(covered)
-                return 0;
-            else 
-                return 1;
-        }
-        
-        
-        auto key = make_pair(root, covered);
-        if(memo.find(key)!=memo.end())return memo[key];
-        
-        // recc //
-        
-        int ans=inf;
-        if(1){
-        // if(not covered){
-            // Case 1: cover it by itself //
-            ans = min(ans, 1 + 
-                      (root->left ? dp(root->left, true) : 0 ) + 
-                      (root->right ? dp(root->right, true) : 0 ) );
-            
-            // Case 2: cover by atleast 1 of its child //
-            int sub=inf;
-            
-            // Case 2.1: Place only on left child // It will have atleast one child as its not a laef node // leaf node is handled in base case //
-            if(root->left){
-                int var = 1 + 
-                    (root->left->left ? dp(root->left->left, true) : 0) +
-                    (root->left->right ? dp(root->left->right, true) : 0) +
-                    (root->right ? dp(root->right, false) : 0 )
-                    ;
-                
-                sub= min(sub, var);
-            }
-            
-            // Case 2.2: Place only on right child 
-            if(root->right){
-                int var = 1 + 
-                    (root->right->left  ? dp(root->right->left, true)  : 0) +
-                    (root->right->right ? dp(root->right->right, true) : 0) +
-                    (root->left ? dp(root->left, false) : 0 )
-                    ;
-                
-                sub = min(sub, var);
-            }
-            
-            // Case 2.3: place on both left and right childs  
-            if(root->left and root->right){
-                int var = 2 + 
-                    (root->left->left   ? dp(root->left->left, true)   : 0) +
-                    (root->left->right  ? dp(root->left->right, true)  : 0) +
-                    (root->right->left  ? dp(root->right->left, true)  : 0) +
-                    (root->right->right ? dp(root->right->right, true) : 0) ;
-                sub= min(sub, var);
-            }
-            
-            ans = min(ans, sub);
-        }
-        
-        if(covered)
-        {
-            ans = min(ans, ( root->left ? dp(root->left, false) : 0 )  + 
-                            ( root->right ? dp(root->right, false) : 0) 
-                     );
-        }
-        
-        return memo[key] = ans;        
-    }
-    
-    int minCameraCover(TreeNode* root) {
         if(!root)return 0;
-        return dp(root, false);
+           
+        if(mp.count(root) == 0)
+            mp[root] = mp.size();
+        
+        if(memo[mp[root]][iscovered][must]!=-1)return memo[mp[root]][iscovered][must];
+        
+        int ans=1e7;
+        // Lets cover this node // 
+        // must be covered // case handled here //
+        ans=min(ans, 1+dp(root->left, 1, 0)+dp(root->right, 1, 0));
+            
+        if(!must){
+            
+            // choice to cover or not //
+            if(iscovered){
+                // dont need to put a camera here as its already covered but children aren't covered //
+                ans = min(ans, dp(root->left, 0, 0) + dp(root->right, 0, 0) );
+            }
+            else{
+                // now its not mandatory to cover this node but someone must cover this //
+                // so case 1: either put a camera on this node itself // case already handled outside conditions
+                
+                // or case 2 : Atleast 1 child have a camera // how to make sure 
+                // first of all there should be atleast one child //
+                if(root->left or root->right){
+                    // case 2.1 only left child 
+                    if(root->left)
+                    ans = min(ans, dp(root->left, 1, 1)+dp(root->right, 0, 0));
+                    // case 2.2 only right child 
+                    if(root->right)
+                    ans = min(ans, dp(root->left, 0, 0)+dp(root->right, 1, 1));
+                    // case 2.3 both the child 
+                }
+                if(root->left and root->right){
+                    ans = min(ans, dp(root->left, 1, 1) + dp(root->right, 1, 1));
+                }
+                
+            }
+        }
+        return memo[mp[root]][iscovered][must] = ans;
+        
+    }
+    int minCameraCover(TreeNode* root) {
+        
+        memset(memo, -1, sizeof memo);
+        
+        
+        return dp(root, 0, 0);
     }
 };
