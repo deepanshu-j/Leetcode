@@ -14,35 +14,24 @@ public:
         int n = heights.size();
       
         auto check = [&](int x)->bool{
-            // debug(x)
+
             vi diff;
             for(int i=0;i<x;++i){
                 if(a[i+1]-a[i]>0)
-                diff.pb(a[i+1]-a[i]);
+                    diff.pb(a[i+1]-a[i]);
             }
             sort(diff.begin(), diff.end());
             
             int sz = diff.size();
-            int lad = ladders;
-            // debugvec(diff)
 
-            while(lad>0 && diff.size()>0){
-                // debug(lad)
-                diff.pop_back();
-                --lad;
-            }
             long long sum=0LL;
-            for(auto el: diff)sum+=el;
+            for(int i=0;i<(sz-ladders);++i) sum+=diff[i];
             
-            // debugvec(diff)
-            bool ok = (sum<=bricks);
-
-            return ok;
+            return sum<=bricks;
         };
 
         int l = 0, r = n-1;
         if(check(r))return r;
-        // l->1 ..... r->0
         
         while(l+1<r){
             int mid = (l+r)/2;
