@@ -10,10 +10,12 @@ public:
         }
         return 1;
     }
-    
+    vector<vector<string>> memo[17];
     vector<vector<string>> dp(int i){
         
         vector<vector<string>> ans;
+        
+        if(memo[i].size()>0)return memo[i];
         
         string p = "";
         for(int j=i;j<n;++j){
@@ -34,12 +36,13 @@ public:
                 }
             }
         }
-        return ans;
+        return memo[i] = ans;
     }
     
     vector<vector<string>> partition(string s) {
         Solution::s = s;
         n = s.size();
+        
         
         return dp(0);
     }
