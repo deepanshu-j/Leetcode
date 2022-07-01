@@ -1,52 +1,52 @@
-#define all(x) x.begin(), x.end()
 class Solution {
 public:
-    
-    int memo[101][101];
+    int inf = 1e7;
     vector<vector<int>> cuboids;
-    // dp[i][j] can we place the ith cuboid considering that jth cuboid was the last placed so ith must adhere to consith with j else we cant place this 
-    int dp(int i, int j){
+    int memo[105][105][3];
+    int dp(int i, int prev, int h_i){ // l<=b always, and h_i height index
         
-        // base case //
-        if(i==-1 or j==0)return 0;
+        // cout<<"i:"<<i<<" , prev:"<<prev<<" , h_i:"<<h_i<<"\n";
+        if(i==-1)return 0;
         
-        if(j!=-1 && memo[i][j]!=-1)return memo[i][j];
+        int ans = -inf;
+        if(memo[i][prev][h_i]!=-1)return memo[i][prev][h_i];
+    
+        int l = cuboids[prev][(h_i+1)%3], b = cuboids[prev][(h_i+2)%3];
+        if(l>b)swap(l, b);
         
-        int ans=0;
-        if(j==-1){ // can place anyone //
-            ans =max(ans, dp(i-1, i) + cuboids[i][2]); // i will be the last placed //
+        // can we take it //
+        if(cuboids[i][0]<=l and cuboids[i][1]<=b and cuboids[i][2]<=cuboids[prev][h_i]){
+            ans = max(ans, cuboids[i][2]+dp(i-1, i, 2) );    
         }
         
-        // some one is already placed , check j with i
-        bool ok=1;
-        for(int k=0;k<3;++k)
-        ok &= (j!=-1 && cuboids[i][k] <= cuboids[j][k] );
-        
-        if(ok){
-            ans = max(ans, dp(i-1, i) + cuboids[i][2] );
+        if(cuboids[i][1]<=l and cuboids[i][2]<=b and cuboids[i][0]<=cuboids[prev][h_i]){
+            ans = max(ans, cuboids[i][0]+dp(i-1, i, 0) ); 
         }
         
-        // donot place this cuboid //
-        ans = max(ans, dp(i-1, j));
-        if(j!=-1)
-        return memo[i][j] = ans;
-        else
-            return ans;
+        if(cuboids[i][0]<=l and cuboids[i][2]<=b and cuboids[i][1]<=cuboids[prev][h_i]){
+            ans = max(ans, cuboids[i][1]+dp(i-1, i, 1) ); 
+        }
+        
+        // dont take it //
+        ans = max(ans, dp(i-1, prev, h_i));
+        
+        return memo[i][prev][h_i] = ans;
     }
     
-    int maxHeight(vector<vector<int>>& cuboids_local_copy) {
-        
-        cuboids=cuboids_local_copy;
-        
-        for(auto &x: cuboids)
-            sort(all(x));
-        
-        sort(all(cuboids));
+    int maxHeight(vector<vector<int>>& cuboids) {
         
         memset(memo, -1, sizeof memo);
+        for(auto &x: cuboids)    sort(x.begin(), x.end());
         
-        int n=cuboids.size();
+        sort(cuboids.begin(), cuboids.end());
         
-        return dp(n-1, -1);
+        // for(auto x: cuboids){
+        //     cout<<x[0]<<" , "<<x[1]<<" , "<<x[2]<<"\n";
+        // }
+        int n = cuboids.size();
+        cuboids.push_back(vector<int>({101, 101, 101}));
+        Solution::cuboids = cuboids;
+        // cout<<"n:"<<n<<"\n";
+        return dp(n-1, n, 1);
     }
 };
