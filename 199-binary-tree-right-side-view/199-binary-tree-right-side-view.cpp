@@ -9,42 +9,32 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-using vi = vector<int>;
 class Solution {
 public:
+    vector<int> right_view;
+    
+    void dfs(TreeNode* root, int depth){
+        
+        if(!root)return;
+        
+        if(right_view.size()<depth+1)
+            right_view.emplace_back(root->val);
+        else
+            right_view[depth] = root->val;
+        
+        
+        if(root->left)
+        dfs(root->left, depth+1);
+        
+        if(root->right)
+        dfs(root->right, depth+1);
+    }
+    
     
     vector<int> rightSideView(TreeNode* root) {
         
-        if(!root)return vi();
-        queue<TreeNode*> q;
+        dfs(root, 0);
         
-        vi ans;
-        
-        int cur = -1;
-        int lvl = 0;
-        
-        q.push(root);
-        q.push(nullptr);
-        
-        while(!q.empty()){
-            auto fr = q.front();
-            q.pop();
-            
-            if(fr == nullptr){
-                ans.emplace_back(cur);
-                ++lvl;
-                if(!q.empty())q.push(nullptr);
-                
-                continue;
-            }
-        
-            cur = fr->val;
-            if(fr->left)q.push(fr->left);
-            if(fr->right)q.push(fr->right);
-            
-        }
-        
-        
-        return ans;
+        return right_view;
     }
 };
