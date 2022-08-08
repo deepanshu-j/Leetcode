@@ -1,25 +1,24 @@
-#define pb push_back
-#define eb emplace_back
-#define all(x) x.begin(), x.end()
 class Solution {
 public:
     int lengthOfLIS(vector<int>& nums) {
         
-        int n=nums.size();
+        vector<int> v { -1000000 };
         
-        vector<int> ans;
-        ans.eb(nums[0]);
-        
-        for(int i=1;i<n;++i){
-            if(nums[i]>ans.back()){
-                ans.eb(nums[i]);
-            }else{
-                int idx = lower_bound(all(ans), nums[i])-ans.begin();
-                assert(idx<ans.size());
-                ans[idx] = nums[i]; 
+        for(auto &x: nums){
+            
+            if(x > v.back() ){
+                v.emplace_back(x);
+                continue;
             }
+            
+            auto it = lower_bound(v.begin(), v.end(), x);
+            int idx = it - v.begin();
+            
+            v[idx] = x;
+            
         }
         
-        return ans.size();
+        int mx = v.size() - 1;        
+        return mx;
     }
 };
