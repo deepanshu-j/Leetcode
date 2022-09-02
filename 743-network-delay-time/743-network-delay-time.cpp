@@ -1,29 +1,26 @@
-#define rep(i,a,b) for(int i=a;i<b;++i)
 class Solution {
 public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
         
-        int inf = 0x3f3f3f3f;
+        int inf = 1e7;
+        int dist[n+1];
+        for(int i=0;i<=n;++i) dist[i] = inf;
         
-        int dist[n+2];
-        rep(i,0,n+1)dist[i]=inf;
+        dist[k] = 0;
         
-        dist[k]=0;
-        
-        rep(j,0,n+2){
+        for(int i=0;i<n;++i){
             for(auto &x: times){
-                int u=x[0],v=x[1],w=x[2];
-                // if(dist[v]<dist[u]+w)
-                    // dist[v] = dist[u]+w
-                dist[v]=min(dist[v], dist[u]+w);
+                int u = x[0], v = x[1], w = x[2];
+                dist[v] = min(dist[u] + w, dist[v]);
             }
         }
         
-        // rep(i,0,n+1)cout<<dist[i]<<" ";
         
-        int mx=-1;
-        rep(i,1,n+1)mx = max(mx, dist[i]);
+        int mx = 0;
+        for(int i=1;i<=n;++i)
+            mx = max(mx, dist[i]);  
         
-        return ((mx==inf)?-1:mx);
+        if(mx == inf)return -1;
+        return mx;
     }
 };
