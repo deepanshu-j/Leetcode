@@ -11,44 +11,39 @@
  */
 class Solution {
 public:
-    int k;
-    TreeNode* root;
-    bool ok=0;
     
-    bool search(TreeNode* node, int target){
+    int k;
+    bool ans  = 0;
+    TreeNode* MainRoot;
+    bool dfs2(TreeNode* root, int target){
         
-        if(!node)return 0;
+        if(!root) return false;
         
-        int val = node->val;
+        if(root->val == target) return true;
         
-        if(val==target)return true;
+        if(target < root->val)
+            return dfs2(root->left, target);
         
-        if(val<target)return search(node->right, target);
-        
-        return search(node->left, target);
-        
+        return dfs2(root->right, target);
     }
     
-    void dfs(TreeNode* node){
+    void dfs1(TreeNode* root){
+        if(!root) return;
+                
+        if( k != 2*root->val )
+            ans |= dfs2(MainRoot, k - (root->val));
         
-        if(!node)return;
-        
-        if( k!= (2*(node->val)))
-        ok |= search(root, k-(node->val));
-        
-        dfs(node->left);
-        dfs(node->right);
-        
+        dfs1(root->left);
+        dfs1(root->right);
     }
     
     bool findTarget(TreeNode* root, int k) {
-        Solution::k=k;
-        Solution::root = root;
+        this->k = k; // Solution::k = k;
         
-        dfs(root);
+        this->MainRoot = root;
+        dfs1(root);
         
-        // cout<<search(root, 3)<<"\n"<<search(root, 1)<<"\n";
-        
-        return ok;
+        return ans;
     }
+    
 };
