@@ -31,7 +31,8 @@ public:
         };
         
         int color = 2;
-        map<pii, int> mp;
+        int mp[n][n];
+        memset(mp, 0, sizeof mp);
         int mx = 0;
         for(int i=0;i<n;++i){
             for(int j=0;j<n;++j){
@@ -44,11 +45,10 @@ public:
                     pii top = currentPath.top();
                     currentPath.pop();
                     grid[top.first][top.second] = color; 
-                    mp[top] = stackSize;
+                    mp[top.first][top.second] = stackSize;
                 }
                 
                 mx = max(mx, stackSize);
-                
                 vis.clear();
             }
         }
@@ -59,16 +59,16 @@ public:
                     
                     set<pii> s; // {color, size} //
                     if(isInside({i+1, j}))
-                        s.insert({grid[i+1][j], mp[make_pair(i+1, j)]});
+                        s.insert({grid[i+1][j], mp[i+1][j]});
                     
                     if(isInside({i, j+1}))
-                        s.insert({grid[i][j+1], mp[make_pair(i, j+1)]});
+                        s.insert({grid[i][j+1], mp[i][j+1]});
                     
                     if(isInside({i-1, j}))
-                        s.insert({grid[i-1][j], mp[make_pair(i-1, j)]});
+                        s.insert({grid[i-1][j], mp[i-1][j]});
                     
                     if(isInside({i, j-1}))
-                        s.insert({grid[i][j-1], mp[make_pair(i, j-1)]});
+                        s.insert({grid[i][j-1], mp[i][j-1]});
                     
                     int sum = 1;
                     for(pii el: s) sum += el.second;
