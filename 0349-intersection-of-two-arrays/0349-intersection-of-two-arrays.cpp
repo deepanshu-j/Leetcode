@@ -6,7 +6,7 @@ public:
         // O(n+m)
         
         vector<int> res;
-        set<int> mp;
+        unordered_set<int> mp;
         for(int &el: nums1) mp.insert(el);
         
         for(auto &x: nums2){
