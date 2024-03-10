@@ -9,12 +9,10 @@ public:
         set<int> mp;
         for(int &el: nums1) mp.insert(el);
         
-        sort(nums2.begin(), nums2.end());
-        int mn = -1;
         for(auto &x: nums2){
-            if(x > mn and mp.count(x) > 0){
+            if(mp.count(x) > 0){
                 res.emplace_back(x);
-                mn = x;
+                mp.erase(x);
             }
         }
         return res;
