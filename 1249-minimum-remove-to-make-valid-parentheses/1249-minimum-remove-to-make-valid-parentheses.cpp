@@ -22,7 +22,7 @@ public:
         
         while(!stk.empty()) { rem.push_back(stk.top()); stk.pop(); } 
         
-        unordered_set<int> st(rem.begin(), rem.end());
+        set<int> st(rem.begin(), rem.end());
         for(int i=0, j=0;i<s.length();++i){
             if(st.count(i)==0) ans += s[i];
         }
