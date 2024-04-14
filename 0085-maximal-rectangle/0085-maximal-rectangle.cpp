@@ -41,13 +41,9 @@ public:
     int largest_rect_in_a_histogram(vector<int> &heights){
         // next smaller element //
         vector<int> nse = findNse(heights);    
+        // prev smaller element //
         vector<int> pse = findPse(heights);
         
-//         for(auto x: heights) cout<<x<<" "; cout<<"\n";
-
-//         for(auto x: nse) cout<<x<<" "; cout<<"\n";
-//         for(auto x: pse) cout<<x<<" "; cout<<"\n";
-
         int n = heights.size(), ans = 0;
         for(int i=0;i<n;++i){
             ans = max(ans, heights[i]*(nse[i] - pse[i] - 1));
@@ -72,10 +68,6 @@ public:
             }
             ans = max(ans, largest_rect_in_a_histogram(base));
         }
-        
-        // vector<int> test{1,2,3,4,5};
-        // vector<int> nse = findPse(test);    
-        // for(auto x: nse) cout<<x<<" ";
         
         return ans;
     }
